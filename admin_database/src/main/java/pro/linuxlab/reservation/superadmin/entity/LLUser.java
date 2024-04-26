@@ -55,4 +55,8 @@ public class LLUser {
     @Column(name = "updated_at")
     @UpdateTimestamp
     LocalDateTime updatedAt;
+
+    public LLUser(String userId) {
+        this.userId = userId;
+    }
 }

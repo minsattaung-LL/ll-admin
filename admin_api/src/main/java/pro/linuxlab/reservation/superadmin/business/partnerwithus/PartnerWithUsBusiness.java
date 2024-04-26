@@ -6,15 +6,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import pro.linuxlab.reservation.BaseResponse;
-import pro.linuxlab.reservation.exception.BusinessException;
+import pro.linuxlab.reservation.superadmin.BaseResponse;
+import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 import pro.linuxlab.reservation.superadmin.business.BaseBusiness;
 import pro.linuxlab.reservation.superadmin.entity.LLPartnerWithUs;
 import pro.linuxlab.reservation.superadmin.service.PartnerWithUsService;
-import pro.linuxlab.reservation.util.Util;
+import pro.linuxlab.reservation.superadmin.util.Util;
 
 import java.util.List;
+import java.util.Locale;
 
 import static pro.linuxlab.reservation.superadmin.error.AdminErrorCode.Business.*;
 
@@ -26,7 +27,7 @@ public class PartnerWithUsBusiness extends BaseBusiness implements IPartnerWithU
     final Util util;
     @Override
     public BaseResponse getPartnerWithUs(String businessName, String businessType, String businessAddress, String firstName, String lastName, String primaryContactNumber, String email, String status, String updatedBy, int offset, int pageSize, String sortBy, String direction) {
-        Pageable pageable = PageRequest.of(offset, pageSize, Sort.by(sortBy, direction));
+        Pageable pageable = PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.valueOf(direction.toUpperCase(Locale.ROOT)), sortBy));
         try {
             return util.generateDefaultResponse(partnerWithUsService.getPartnerWithUsData(businessName, businessType, businessAddress, firstName, lastName, primaryContactNumber, email, status, updatedBy, pageable));
         } catch (Exception e) {

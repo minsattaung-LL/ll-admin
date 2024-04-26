@@ -3,7 +3,7 @@ package pro.linuxlab.reservation.superadmin.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.linuxlab.reservation.BaseResponse;
+import pro.linuxlab.reservation.superadmin.BaseResponse;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 import pro.linuxlab.reservation.superadmin.business.partnerwithus.IPartnerWithUs;
 
@@ -25,7 +25,7 @@ public class PartnerWithUsController {
                                                          @RequestParam(required = false) String updatedBy,
                                                          @RequestParam(name = "offset", defaultValue = "0", required = false) int offset,
                                                          @RequestParam(name = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                                         @RequestParam(name = "sortBy", defaultValue = "createdAt", required = false) String sortBy,
+                                                         @RequestParam(name = "sortBy", defaultValue = "created_at", required = false) String sortBy,
                                                          @RequestParam(defaultValue = "desc") String direction) {
         return ResponseEntity.ok(iPartnerWithUs.getPartnerWithUs(businessName, businessType, businessAddress, firstName, lastName, primaryContactNumber, email, status, updatedBy, offset, pageSize, sortBy, direction));
     }

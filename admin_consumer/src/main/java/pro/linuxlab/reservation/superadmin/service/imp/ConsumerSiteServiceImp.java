@@ -8,6 +8,7 @@ import pro.linuxlab.reservation.superadmin.repo.LLSiteConfigRepo;
 import pro.linuxlab.reservation.superadmin.service.ConsumerSiteService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -22,5 +23,10 @@ public class ConsumerSiteServiceImp implements ConsumerSiteService {
     @Override
     public void save(LLSiteConfig entity) {
         llSiteConfigRepo.save(entity);
+    }
+
+    @Override
+    public Optional<LLSiteConfig> findById(String siteId) {
+        return llSiteConfigRepo.findById(siteId);
     }
 }

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>super-admin</artifactId>
-        <groupId>pro.linuxlab.reservation</groupId>
+        <groupId>pro.linuxlab.reservation.superadmin</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -35,8 +35,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>pro.linuxlab.reservation</groupId>
+            <groupId>pro.linuxlab.reservation.superadmin</groupId>
             <artifactId>admin_database</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pro.linuxlab.reservation.superadmin</groupId>
+            <artifactId>admin_util</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -5,7 +5,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
 import org.springframework.util.StringUtils;
-import pro.linuxlab.reservation.Translator;
+import pro.linuxlab.reservation.superadmin.Translator;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 
 import java.lang.annotation.*;

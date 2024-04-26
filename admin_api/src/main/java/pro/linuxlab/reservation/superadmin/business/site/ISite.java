@@ -1,6 +1,6 @@
 package pro.linuxlab.reservation.superadmin.business.site;
 
-import pro.linuxlab.reservation.BaseResponse;
+import pro.linuxlab.reservation.superadmin.BaseResponse;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 import pro.linuxlab.reservation.superadmin.dto.site.SiteRequest;
 import pro.linuxlab.reservation.superadmin.dto.site.SiteUpdateRequest;

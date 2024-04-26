@@ -9,13 +9,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import pro.linuxlab.reservation.BaseResponse;
-import pro.linuxlab.reservation.exception.BusinessException;
+import pro.linuxlab.reservation.superadmin.BaseResponse;
+import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 import pro.linuxlab.reservation.superadmin.EnumPool.EntityConfig;
 import pro.linuxlab.reservation.superadmin.entity.*;
 import pro.linuxlab.reservation.superadmin.service.*;
-import pro.linuxlab.reservation.util.Util;
+import pro.linuxlab.reservation.superadmin.util.Util;
 
 import java.util.*;
 
@@ -38,6 +38,8 @@ public class BaseBusiness {
     SiteStaffService siteStaffService;
     @Autowired
     JdbcService jdbcService;
+    @Autowired
+    Util util;
     @Getter
     private Map<EntityConfig, Map<String, String>> configMap;
 
@@ -49,22 +51,27 @@ public class BaseBusiness {
         each.put("idName","customer_id");
         each.put("table","ll_customer");
         configMap.put(EntityConfig.CUSTOMER, each);
+        each = new HashMap<>();
         each.put("prefix","CI");
         each.put("idName","customer_inquiry_id");
         each.put("table","ll_customer_inquiry");
         configMap.put(EntityConfig.CUSTOMER_INQUIRY, each);
+        each = new HashMap<>();
         each.put("prefix","P");
         each.put("idName","partner_with_us_id");
         each.put("table","ll_partner_with_us");
         configMap.put(EntityConfig.PARTNER_WITH_US, each);
+        each = new HashMap<>();
         each.put("prefix","S");
         each.put("idName","site_id");
         each.put("table","ll_site_config");
         configMap.put(EntityConfig.SITE_CONFIG, each);
+        each = new HashMap<>();
         each.put("prefix","SS");
         each.put("idName","site_staff_id");
         each.put("table","ll_site_staff");
         configMap.put(EntityConfig.SITE_STAFF, each);
+        each = new HashMap<>();
         each.put("prefix","U");
         each.put("idName","user_id");
         each.put("table","ll_user");

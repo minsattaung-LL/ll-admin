@@ -6,10 +6,10 @@ import org.keycloak.admin.client.Keycloak;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import pro.linuxlab.reservation.exception.BusinessException;
+import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.config.AppConfig;
 import pro.linuxlab.reservation.superadmin.service.KeycloakService;
-import pro.linuxlab.reservation.util.Util;
+import pro.linuxlab.reservation.superadmin.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;

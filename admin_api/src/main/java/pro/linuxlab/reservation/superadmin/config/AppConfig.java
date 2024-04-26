@@ -35,6 +35,7 @@ public class AppConfig {
     @Data
     public static class Datasource {
         private String url;
+        private String database;
         private String username;
         private String password;
         private String driverClassName;

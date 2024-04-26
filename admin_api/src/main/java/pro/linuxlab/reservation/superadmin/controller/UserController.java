@@ -20,7 +20,7 @@ public class UserController {
                                               @RequestParam(required = false) String site,
                                               @RequestParam(name = "offset", defaultValue = "0", required = false) int offset,
                                               @RequestParam(name = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                              @RequestParam(name = "sortBy", defaultValue = "createdAt", required = false) String sortBy,
+                                              @RequestParam(name = "sortBy", defaultValue = "created_at", required = false) String sortBy,
                                               @RequestParam(defaultValue = "asc") String direction) {
         return ResponseEntity.ok(iUser.getAdminUserList(search, site, offset, pageSize, sortBy, direction));
     }

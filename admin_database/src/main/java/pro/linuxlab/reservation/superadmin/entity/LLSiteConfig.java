@@ -14,7 +14,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import pro.linuxlab.reservation.superadmin.EnumPool.SiteUserStatus;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "ll_site_config", schema = "system_config_db")
@@ -34,13 +36,13 @@ public class LLSiteConfig {
     @Column(name = "kc_client_secret", unique = true, nullable = false)
     String kcClientSecret;
 
-    @Column(name = "database_url", unique = true, nullable = false)
+    @Column(name = "database_url", nullable = false)
     String databaseUrl;
-    @Column(name = "database_name", unique = true, nullable = false)
+    @Column(name = "database_name", nullable = false)
     String databaseName;
-    @Column(name = "database_user", unique = true, nullable = false)
+    @Column(name = "database_user", nullable = false)
     String databaseUser;
-    @Column(name = "database_password", unique = true, nullable = false)
+    @Column(name = "database_password", nullable = false)
     String databasePassword;
 
 
@@ -67,4 +69,16 @@ public class LLSiteConfig {
     @Column(name = "updated_by")
     String updatedBy;
 
+
+    public void setCreatedAt(long timestamp) {
+        this.createdAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+    }
+
+    public void setUpdatedAt(long timestamp) {
+        this.updatedAt = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+    }
+
+    public LLSiteConfig(String siteId) {
+        this.siteId = siteId;
+    }
 }

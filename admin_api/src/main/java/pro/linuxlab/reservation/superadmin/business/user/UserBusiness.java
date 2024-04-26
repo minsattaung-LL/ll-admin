@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import pro.linuxlab.reservation.BaseResponse;
-import pro.linuxlab.reservation.exception.BusinessException;
+import pro.linuxlab.reservation.superadmin.BaseResponse;
+import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 import pro.linuxlab.reservation.superadmin.business.BaseBusiness;
 import pro.linuxlab.reservation.superadmin.dto.mongo.MongoDto;
@@ -20,9 +20,10 @@ import pro.linuxlab.reservation.superadmin.queue.KafkaSender;
 import pro.linuxlab.reservation.superadmin.service.KeycloakService;
 import pro.linuxlab.reservation.superadmin.service.MongoService;
 import pro.linuxlab.reservation.superadmin.service.UserService;
-import pro.linuxlab.reservation.util.Util;
+import pro.linuxlab.reservation.superadmin.util.Util;
 
 import java.util.List;
+import java.util.Locale;
 
 import static pro.linuxlab.reservation.superadmin.error.AdminErrorCode.Business.*;
 
@@ -38,7 +39,7 @@ public class UserBusiness extends BaseBusiness implements IUser {
 
     @Override
     public BaseResponse getAdminUserList(String search, String site, int offset, int pageSize, String sortBy, String direction) {
-        Pageable pageable = PageRequest.of(offset, pageSize, Sort.by(sortBy, direction));
+        Pageable pageable = PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.valueOf(direction.toUpperCase(Locale.ROOT)), sortBy));
         try {
             return util.generateDefaultResponse(userService.getUserData(search, site, pageable));
         } catch (Exception e) {
@@ -57,7 +58,7 @@ public class UserBusiness extends BaseBusiness implements IUser {
                         .llUser(llUser)
                         .userCreateRequest(userCreateRequest)
                         .build());
-        kafkaSender.sendSiteMessage(key);
+        kafkaSender.sendUserMessage(key);
         return util.generateDefaultResponse(null);
     }
 
@@ -68,10 +69,10 @@ public class UserBusiness extends BaseBusiness implements IUser {
         mongoService.saveInMongo(key,
                 MongoDto.builder()
                         .mongoDataConfigFunc(EnumPool.MongoDataConfigFunc.UPDATE)
-                        .llUser(llUser)
+                        .llUser(new LLUser(userId))
                         .userUpdateRequest(userUpdateRequest)
                         .build());
-        kafkaSender.sendSiteMessage(key);
+        kafkaSender.sendUserMessage(key);
         return util.generateDefaultResponse(null);
     }
 
@@ -83,9 +84,9 @@ public class UserBusiness extends BaseBusiness implements IUser {
         mongoService.saveInMongo(key,
                 MongoDto.builder()
                         .mongoDataConfigFunc(EnumPool.MongoDataConfigFunc.STATUS)
-                        .llUser(llUser)
+                        .llUser(new LLUser(userId))
                         .build());
-        kafkaSender.sendSiteMessage(key);
+        kafkaSender.sendUserMessage(key);
         return util.generateDefaultResponse(null);
     }
 
@@ -111,8 +112,11 @@ public class UserBusiness extends BaseBusiness implements IUser {
             }
         }
         entity.setUserId((StringUtils.hasLength(userId))?userId:generateId(EnumPool.EntityConfig.USER));
-        entity.setStatus(EnumPool.SiteUserStatus.Active);
+        entity.setStatus(EnumPool.SiteUserStatus.valueOf(userUpdateRequest.getStatus()));
         entity.setDescription(userUpdateRequest.getDescription());
+        entity.setPhoneNumber(userUpdateRequest.getPhoneNumber());
+        entity.setUserRole(EnumPool.UserRole.Staff);
+        entity.setStatus(EnumPool.SiteUserStatus.Active);
         entity.setOwner(userUpdateRequest.getOwner());
         return entity;
     }

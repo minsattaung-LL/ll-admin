@@ -32,7 +32,7 @@ public class SiteController {
                                      @RequestParam(required = false) String siteUserStatus,
                                      @RequestParam(name = "offset", defaultValue = "0", required = false) int offset,
                                      @RequestParam(name = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                     @RequestParam(name = "sortBy", defaultValue = "createdAt", required = false) String sortBy,
+                                     @RequestParam(name = "sortBy", defaultValue = "created_at", required = false) String sortBy,
                                      @RequestParam(defaultValue = "asc") String direction) {
         return ResponseEntity.ok(iSite.getSite(siteName, kcClientId, kcClientSecret, databaseUrl, databaseName, databaseUser, databasePassword, description, siteUserStatus, offset, pageSize, sortBy, direction));
     }
@@ -42,9 +42,9 @@ public class SiteController {
         return ResponseEntity.ok(iSite.createNewSite(request));
     }
 
-    @PutMapping("/{systemId}/update")
-    public ResponseEntity<?> updateSite(@PathVariable String systemId, @Valid @RequestBody SiteUpdateRequest request) {
-        return ResponseEntity.ok(iSite.updateSite(systemId, request));
+    @PutMapping("/{siteId}/update")
+    public ResponseEntity<?> updateSite(@PathVariable String siteId, @Valid @RequestBody SiteUpdateRequest request) {
+        return ResponseEntity.ok(iSite.updateSite(siteId, request));
     }
 
     @PutMapping("/{siteId}/status")

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import pro.linuxlab.reservation.superadmin.validation.SiteUserStatusChecker;
 
 import java.util.List;
 
@@ -18,4 +19,8 @@ public class UserUpdateRequest {
     List<String> systemList;
     @NotBlank
     String description;
+    @NotBlank
+    String phoneNumber;
+    @SiteUserStatusChecker
+    String status;
 }

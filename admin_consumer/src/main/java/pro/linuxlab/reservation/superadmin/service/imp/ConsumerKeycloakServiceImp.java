@@ -8,7 +8,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import pro.linuxlab.reservation.exception.BusinessException;
+import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 import pro.linuxlab.reservation.superadmin.config.AppConfig;
 import pro.linuxlab.reservation.superadmin.dto.keycloak.ClientCreateRequest;
@@ -19,7 +19,7 @@ import pro.linuxlab.reservation.superadmin.dto.user.UserUpdateRequest;
 import pro.linuxlab.reservation.superadmin.entity.LLSiteConfig;
 import pro.linuxlab.reservation.superadmin.entity.LLUser;
 import pro.linuxlab.reservation.superadmin.service.ConsumerKeycloakService;
-import pro.linuxlab.reservation.util.Util;
+import pro.linuxlab.reservation.superadmin.util.Util;
 
 import java.util.*;
 
@@ -47,8 +47,13 @@ public class ConsumerKeycloakServiceImp implements ConsumerKeycloakService {
         credentialMap.put("type", "password");
         credentialMap.put("value", request.getPassword());
         credentials.add(credentialMap);
-
         userMap.put("credentials", credentials);
+
+        Map<String, String> attributeMap = new HashMap<>();
+        attributeMap.put("system", String.join(",", request.getSystemList()));
+        attributeMap.put("phoneNumber", request.getPhoneNumber());
+        userMap.put("attributes", attributeMap);
+
         String token = keycloak.tokenManager().getAccessToken().getToken();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(token);
@@ -107,9 +112,10 @@ public class ConsumerKeycloakServiceImp implements ConsumerKeycloakService {
 
     @Override
     public void updateSystemAttributes(UserUpdateRequest userUpdateRequest, LLUser entity) {
-        Map<String, String> systemMap = new HashMap<>();
-        systemMap.put("system", String.join(",", userUpdateRequest.getSystemList()));
-        updateVariableForUser(entity.getKcUserId(), "attributes", systemMap);
+        Map<String, String> attributeMap = new HashMap<>();
+        attributeMap.put("system", String.join(",", userUpdateRequest.getSystemList()));
+        attributeMap.put("phoneNumber", userUpdateRequest.getPhoneNumber());
+        updateVariableForUser(entity.getKcUserId(), "attributes", attributeMap);
     }
 
     @Override

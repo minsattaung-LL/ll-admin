@@ -1,5 +1,6 @@
 package pro.linuxlab.reservation.superadmin.queue;
 
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -9,7 +10,7 @@ import pro.linuxlab.reservation.superadmin.business.site.ConsumerSiteBusiness;
 import pro.linuxlab.reservation.superadmin.business.user.ConsumerUserBusiness;
 import pro.linuxlab.reservation.superadmin.dto.mongo.MongoDto;
 import pro.linuxlab.reservation.superadmin.service.MongoFetch;
-import pro.linuxlab.reservation.util.Util;
+import pro.linuxlab.reservation.superadmin.util.Util;
 
 @Component
 @Slf4j
@@ -33,7 +34,12 @@ public class ReceiveMessageImp implements ReceiveMessage{
                 return;
             }
             log.info("Received Site Topic message [{}], offset [{}]", consumerRecord.value(), consumerRecord.offset());
-            MongoDto mongoDto = (MongoDto) mongoFetch.findAndDeleteInMongo(consumerRecord.value());
+            String returnString = mongoFetch.findAndDeleteInMongo(consumerRecord.value());
+            if (StringUtils.isBlank(returnString)) {
+                log.error("[{}] is not found in MongoDB", consumerRecord.value());
+                return;
+            }
+            MongoDto mongoDto = util.toObject(returnString, MongoDto.class);
             switch (mongoDto.getMongoDataConfigFunc()) {
                 case CREATE -> {
                     consumerSiteBusiness.createNewSite(mongoDto);
@@ -69,7 +75,12 @@ public class ReceiveMessageImp implements ReceiveMessage{
                 return;
             }
             log.info("Received User Topic message [{}], offset [{}]", consumerRecord.value(), consumerRecord.offset());
-            MongoDto mongoDto = (MongoDto) mongoFetch.findAndDeleteInMongo(consumerRecord.value());
+            String returnString = mongoFetch.findAndDeleteInMongo(consumerRecord.value());
+            if (StringUtils.isBlank(returnString)) {
+                log.error("[{}] is not found in MongoDB", consumerRecord.value());
+                return;
+            }
+            MongoDto mongoDto = util.toObject(returnString, MongoDto.class);
             log.info("Retrieved data from mongo : {}", util.toJson(mongoDto));
             switch (mongoDto.getMongoDataConfigFunc()) {
                 case CREATE -> {
