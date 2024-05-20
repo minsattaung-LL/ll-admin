@@ -9,11 +9,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import pro.linuxlab.reservation.superadmin.BaseResponse;
-import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 import pro.linuxlab.reservation.superadmin.EnumPool.EntityConfig;
 import pro.linuxlab.reservation.superadmin.entity.*;
+import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.service.*;
 import pro.linuxlab.reservation.superadmin.util.Util;
 
@@ -47,36 +46,37 @@ public class BaseBusiness {
     public void initialize() {
         configMap = new HashMap<>();
         Map<String, String> each = new HashMap<>();
-        each.put("prefix","C");
-        each.put("idName","customer_id");
-        each.put("table","ll_customer");
+        each.put("prefix", "C");
+        each.put("idName", "customer_id");
+        each.put("table", "ll_customer");
         configMap.put(EntityConfig.CUSTOMER, each);
         each = new HashMap<>();
-        each.put("prefix","CI");
-        each.put("idName","customer_inquiry_id");
-        each.put("table","ll_customer_inquiry");
+        each.put("prefix", "CI");
+        each.put("idName", "customer_inquiry_id");
+        each.put("table", "ll_customer_inquiry");
         configMap.put(EntityConfig.CUSTOMER_INQUIRY, each);
         each = new HashMap<>();
-        each.put("prefix","P");
-        each.put("idName","partner_with_us_id");
-        each.put("table","ll_partner_with_us");
+        each.put("prefix", "P");
+        each.put("idName", "partner_with_us_id");
+        each.put("table", "ll_partner_with_us");
         configMap.put(EntityConfig.PARTNER_WITH_US, each);
         each = new HashMap<>();
-        each.put("prefix","S");
-        each.put("idName","site_id");
-        each.put("table","ll_site_config");
+        each.put("prefix", "S");
+        each.put("idName", "site_id");
+        each.put("table", "ll_site_config");
         configMap.put(EntityConfig.SITE_CONFIG, each);
         each = new HashMap<>();
-        each.put("prefix","SS");
-        each.put("idName","site_staff_id");
-        each.put("table","ll_site_staff");
+        each.put("prefix", "SS");
+        each.put("idName", "site_staff_id");
+        each.put("table", "ll_site_staff");
         configMap.put(EntityConfig.SITE_STAFF, each);
         each = new HashMap<>();
-        each.put("prefix","U");
-        each.put("idName","user_id");
-        each.put("table","ll_user");
+        each.put("prefix", "U");
+        each.put("idName", "user_id");
+        each.put("table", "ll_user");
         configMap.put(EntityConfig.USER, each);
     }
+
     public List<String> getSiteList() {
         try {
             return siteService.getSiteConfigList();
@@ -85,7 +85,8 @@ public class BaseBusiness {
             throw new BusinessException(DATABASE_ERROR);
         }
     }
-    public Optional<?> findById (String id, EntityConfig entityConfig) {
+
+    public Optional<?> findById(String id, EntityConfig entityConfig) {
         return switch (entityConfig) {
             case CUSTOMER -> customerService.findById(id);
             case CUSTOMER_INQUIRY -> customerInquiryService.findById(id);
@@ -106,7 +107,8 @@ public class BaseBusiness {
             case SITE_STAFF -> siteStaffService.save((LLSiteStaff) entity);
         };
     }
-    public String generateId (EntityConfig entityConfig) {
+
+    public String generateId(EntityConfig entityConfig) {
         return jdbcService.generateId(entityConfig, configMap.get(entityConfig));
     }
 
@@ -117,7 +119,8 @@ public class BaseBusiness {
         int min = pageNo > totalPages ? max : pageSize * pageNo;
         return new PageImpl<>(list.subList(min, max), pageable, list.size());
     }
+
     public String generateKeyForMongo(EnumPool.KeyPrefix keyPrefix) {
-        return EnumPool.KeyPrefix.getPrefix(keyPrefix) +"-" + UUID.randomUUID().toString().substring(0,8);
+        return EnumPool.KeyPrefix.getPrefix(keyPrefix) + "-" + UUID.randomUUID().toString().substring(0, 8);
     }
 }

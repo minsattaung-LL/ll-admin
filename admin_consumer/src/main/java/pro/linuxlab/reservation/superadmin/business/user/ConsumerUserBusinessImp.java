@@ -5,13 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import pro.linuxlab.reservation.superadmin.EnumPool;
 import pro.linuxlab.reservation.superadmin.business.BaseBusiness;
-import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.dto.mongo.MongoDto;
 import pro.linuxlab.reservation.superadmin.dto.user.UserCreateRequest;
 import pro.linuxlab.reservation.superadmin.dto.user.UserUpdateRequest;
 import pro.linuxlab.reservation.superadmin.entity.LLSiteConfig;
 import pro.linuxlab.reservation.superadmin.entity.LLSiteStaff;
 import pro.linuxlab.reservation.superadmin.entity.LLUser;
+import pro.linuxlab.reservation.superadmin.exception.BusinessException;
 import pro.linuxlab.reservation.superadmin.service.ConsumerKeycloakService;
 import pro.linuxlab.reservation.superadmin.service.ConsumerSiteService;
 import pro.linuxlab.reservation.superadmin.service.ConsumerSiteUserService;
@@ -28,7 +28,7 @@ import static pro.linuxlab.reservation.superadmin.error.AdminErrorCode.Business.
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ConsumerUserBusinessImp extends BaseBusiness implements ConsumerUserBusiness{
+public class ConsumerUserBusinessImp extends BaseBusiness implements ConsumerUserBusiness {
     final ConsumerUserService consumerUserService;
     final ConsumerSiteService consumerSiteService;
     final ConsumerSiteUserService consumerSiteUserService;
@@ -49,7 +49,7 @@ public class ConsumerUserBusinessImp extends BaseBusiness implements ConsumerUse
     @Override
     public void updateUser(MongoDto mongoDto) {
         LLUser entity = mongoDto.getLlUser();
-        entity = consumerUserService.findById(entity.getUserId()).orElseThrow(()->new BusinessException(ENTITY_NOT_EXISTS));
+        entity = consumerUserService.findById(entity.getUserId()).orElseThrow(() -> new BusinessException(ENTITY_NOT_EXISTS));
         UserUpdateRequest request = mongoDto.getUserUpdateRequest();
         consumerKeycloakService.updateSystemAttributes(request, entity);
         saveAndDeleteSystemAndUser(entity, request.getSystemList());
@@ -67,11 +67,14 @@ public class ConsumerUserBusinessImp extends BaseBusiness implements ConsumerUse
 
     @Override
     public void updateStatusOfUser(MongoDto mongoDto) {
-        LLUser entity = mongoDto.getLlUser();
-        entity = consumerUserService.findById(entity.getUserId()).orElseThrow(()->new BusinessException(ENTITY_NOT_EXISTS));
-        consumerKeycloakService.changeUserStatus(entity, entity.getStatus());
+        String id = mongoDto.getLlUser().getUserId();
+        EnumPool.SiteUserStatus status = mongoDto.getLlUser().getStatus();
+        LLUser entity = consumerUserService.findById(id).orElseThrow(() -> new BusinessException(ENTITY_NOT_EXISTS));
+        entity.setStatus(status);
+        consumerKeycloakService.changeUserStatus(entity, status);
         consumerUserService.save(entity);
     }
+
     private void saveSystemAndUser(LLUser llUser, List<String> systemList) {
         Map<String, LLSiteConfig> siteMap = getSystemMap();
         LLSiteStaff entity = new LLSiteStaff();
@@ -83,6 +86,7 @@ public class ConsumerUserBusinessImp extends BaseBusiness implements ConsumerUse
             entity = new LLSiteStaff();
         }
     }
+
     public Map<String, LLSiteConfig> getSystemMap() {
         List<LLSiteConfig> projectionList = consumerSiteService.getSiteList();
         return projectionList.stream().collect(Collectors.toMap(LLSiteConfig::getSiteName, x -> x));
